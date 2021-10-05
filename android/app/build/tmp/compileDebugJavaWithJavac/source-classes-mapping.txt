@@ -1,0 +1,14 @@
+com/socialmedia_app/MainApplication.java
+ com.socialmedia_app.MainApplication
+ com.socialmedia_app.MainApplication$1
+com/socialmedia_app/ReactNativeFlipper.java
+ com.socialmedia_app.ReactNativeFlipper
+ com.socialmedia_app.ReactNativeFlipper$1
+ com.socialmedia_app.ReactNativeFlipper$2
+ com.socialmedia_app.ReactNativeFlipper$2$1
+com/socialmedia_app/MainActivity.java
+ com.socialmedia_app.MainActivity
+com/socialmedia_app/BuildConfig.java
+ com.socialmedia_app.BuildConfig
+com/facebook/react/PackageList.java
+ com.facebook.react.PackageList
