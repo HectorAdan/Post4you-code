@@ -1,5 +1,5 @@
 
-import React, { createRef, useState } from 'react';
+import React, { useState } from 'react';
 import {
     View, Text, Alert
 } from 'react-native';
@@ -15,6 +15,7 @@ export default function SignUp (props){
     const [formData, setFormData] =  useState({username:"", email:"", firstName:"", lastName:"", password:"" });
     const {userLogin, createUser} = UserServices();
     const [isCreating, setIsCreating] =  useState(false);
+    const [securePassword, setSecurePassword] = useState(false);
 
     const handleSignUp =()=>{
         if(formData.username===""){
@@ -30,10 +31,10 @@ export default function SignUp (props){
         }else{
             setIsCreating(true)
             createUser(formData).then(res=>{
-                console.log(res)
                 if(res.ok){
                     props.jumpTo("login")
                     Alert.alert("Beautiful!", res.message)
+                    setFormData({username:"", email:"", firstName:"", lastName:"", password:"" })
                 }else{
                     Alert.alert("Error", res.message)
                 }
@@ -88,7 +89,8 @@ export default function SignUp (props){
                     <TextInput
                         mode={"outlined"}
                         label="Password"
-                        secureTextEntry={true}
+                        right={<TextInput.Icon icon={securePassword?"eye":"eye-off"} onPress={()=>setSecurePassword(!securePassword)}  />}
+                        secureTextEntry={securePassword}
                         value={formData.password}
                         onChangeText={text => setFormData({...formData, password: text})}
                     />
@@ -97,6 +99,7 @@ export default function SignUp (props){
                         mode={"contained"}
                         loading={isCreating}
                         onPress={()=>{handleSignUp()}}
+                        disabled={isCreating}
                     >
                         SignUp
                     </Button> 

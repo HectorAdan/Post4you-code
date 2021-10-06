@@ -4,7 +4,7 @@ import {
     View, Text, Alert, TouchableHighlight, RefreshControl, FlatList
 } from 'react-native';
 
-import { Avatar, Card, Title, ActivityIndicator, Paragraph, Button } from 'react-native-paper';
+import { Avatar, Card, Title, ActivityIndicator, Paragraph, Button, IconButton } from 'react-native-paper';
 import styles from './styles';
 
 import UserServices from '../services/UserServices';
@@ -17,13 +17,14 @@ const wait = (timeout) => {
 }
 
 export default function Profile (props){
+    const {userData, setUpdatePost} =props;
 
     const {getUserById} = UserServices();
-    const {getAllPostsByUser} = PostServices();
+    const {getAllPostsByUser, deletePost} = PostServices();
     const [userInfo, setUserInfo] = useState(null);
     const [postData, setPostData] =  useState([]);
     const [isLoadingData, setIsLoadingData] =  useState(true);
-
+    const [isDeleting, setIsDeleting] = useState(false);
 
     useEffect(()=>{
         handleGetUserById();
@@ -31,7 +32,6 @@ export default function Profile (props){
     },[])
 
     const handleGetUserById= async()=>{
-        const userData = JSON.parse(await AsyncStorage.getItem("@userData"));
         getUserById(userData.idUser).then(res=>{
             if(res.ok){
                 setUserInfo(res.user)
@@ -39,7 +39,6 @@ export default function Profile (props){
         })
     }
     const handleGetUserPosts =async()=>{
-        const userData = JSON.parse(await AsyncStorage.getItem("@userData"));
         getAllPostsByUser(userData.idUser).then(res=>{
             setIsLoadingData(false);
             if(res.ok){
@@ -56,20 +55,54 @@ export default function Profile (props){
         props.jumpTo("home")
     }
 
+    const handleDelete = (post)=>{
+        Alert.alert(
+            'Delete post',
+            'Deleting '+post.title+', Are you sure?',
+            [
+              {
+                text: 'Cancel',
+                style: 'cancel'
+              },
+              {
+                text: 'Delete',
+                onPress: () => {
+                    setIsDeleting(true)
+                    deletePost(post.idPost, index).then(res=>{
+                       
+                        if(res.ok){
+                            Alert.alert("Beautiful!", "Post deleted")
+                            handleGetUserPosts();
+                            setUpdatePost(true);
+                        }else{
+                            Alert.alert("Error", "Post not deleted")
+                        }
+                        setIsDeleting(false)
+                    })
+                }
+              }
+            ]
+          );
+    }
+
     const renderPost = ({ item, index, separators }) => (
         <TouchableHighlight
             key={item.key}
-            onPress={() => { alert("post") }}
             onShowUnderlay={separators.highlight}
             onHideUnderlay={separators.unhighlight}
             style={{marginBottom:10}}>
             <Card>
-                <Card.Title title={item.firstName} subtitle={new Date(item.create_at).toDateString()+", "+new Date(item.create_at).toLocaleTimeString()} left={(props)=><Avatar.Text {...props} label={item.firstName.match(/\b(\w)/g)[0] +""+ item.firstName.match(/\b(\w)/g)[1]} />} />
+                <Card.Title 
+                    title={<Text style={{fontSize:18}}>{item.firstName +" "+ item.lastName}</Text>}
+                    subtitle={new Date(item.create_at).toDateString()+", "+new Date(item.create_at).toLocaleTimeString()} 
+                    left={(props)=><Avatar.Text {...props} label={item.firstName.match(/\b(\w)/g)[0] +""+ item.lastName.match(/\b(\w)/g)[0]} />}
+                    right={(props) => <IconButton {...props} disabled={isDeleting} icon="close"  onPress={() => {handleDelete(item, index)}} />}
+                />
+                    
                 <Card.Content>
                     <Title>{item.title}</Title>
                     <Paragraph style={{textAlign:"justify"}}>{item.content}</Paragraph>
                 </Card.Content>
-
             </Card>
         </TouchableHighlight>
     )
@@ -95,7 +128,7 @@ export default function Profile (props){
                       onRefresh={onRefresh}
                     />
                 }
-                
+                style={{height:"100%"}}
                 ListHeaderComponent={
                     <>
                         <Card style={styles.cardStyle}>

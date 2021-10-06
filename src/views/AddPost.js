@@ -1,9 +1,9 @@
 
 import React, { useState } from 'react';
 import {
-    View, Text, Alert
+    View, Alert
 } from 'react-native';
-import { TextInput, Card, HelperText, Paragraph, Button } from 'react-native-paper';
+import { TextInput, Card, HelperText, Paragraph, Button  } from 'react-native-paper';
 import styles from './styles';
 
 import PostServices from '../services/PostServices';
@@ -18,7 +18,7 @@ export default function AddPost (props){
         content:"",
         idStatus: 2,
     });
-    const [isCreating, setIsCreating] = useState(false)
+    const [isCreating, setIsCreating] = useState()
 
     const handleCreatePost =()=>{
         if(formData.title===""){
@@ -29,9 +29,10 @@ export default function AddPost (props){
             setIsCreating(true);
             createPost(formData).then(res=>{
                 if(res.ok){
-                    Alert.alert("Beautiful!", res.message)
+                    // Alert.alert("Beautiful!", res.message)
                     setFormData({...formData, title:"", content:""})
                     props.jumpTo("home")
+                    props.setUpdatePost(true)
                 }else{
                     Alert.alert("Error", res.message)
                 }
@@ -67,6 +68,7 @@ export default function AddPost (props){
                 <Button
                     mode={"contained"}
                     loading={isCreating}
+                    disabled={isCreating}
                     onPress={()=>{handleCreatePost()}}
                 >
                     POST

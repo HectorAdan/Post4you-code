@@ -49,10 +49,26 @@ const PostServices = ()=>{
         })
     }
 
+    const deletePost = async (idPost)=>{
+        return await fetch(URL_API+"/post-delete/"+idPost, {
+            method:"DELETE",
+            headers:{
+                "Content-Type": "application/json"
+            }
+        }).then(res =>{
+            return res.json();
+        }).then(res=>{
+            return res;
+        }).catch(e=>{
+            console.log("error"+ e)
+        })
+    }
+
     return {
         getAllPosts,
         getAllPostsByUser,
-        createPost
+        createPost,
+        deletePost
     }
 }
 export default PostServices;

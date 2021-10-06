@@ -1,0 +1,4 @@
+#Wed Oct 06 00:56:38 CDT 2021
+base.0=D\:\\Users\\wolia\\Documents\\reactProjects\\github\\Post4you-code\\android\\app\\build\\intermediates\\dex\\release\\mergeDexRelease\\classes.dex
+path.0=classes.dex
+renamed.0=classes.dex

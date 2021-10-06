@@ -9,7 +9,8 @@ const styles = StyleSheet.create({
         borderRadius:20,
         marginVertical:10,
         justifyContent:"center",
-        marginLeft:6
+        marginLeft:6,
+        elevation:2
     },
     chipText:{
         fontSize:18,

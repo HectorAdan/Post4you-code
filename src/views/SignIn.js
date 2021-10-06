@@ -16,6 +16,7 @@ export default function SignIn (props){
     const [formData, setFormData] =  useState({username:"", password:"" });
     const {userLogin} = UserServices();
     const [isLoggingIn, setIsLoggingIn] =  useState(false);
+    const [securePassword, setSecurePassword] = useState(false);
 
     const handleLogin =()=>{
         if(formData.username===""){
@@ -35,6 +36,7 @@ export default function SignIn (props){
             })
         }
     }
+    
     const setUserSession = async(res)=>{
         const data = JSON.stringify(res.user);
         await AsyncStorage.setItem("@userData", data);
@@ -62,7 +64,8 @@ export default function SignIn (props){
                     <TextInput
                         mode={"outlined"}
                         label="Password"
-                        secureTextEntry={true}
+                        right={<TextInput.Icon icon={securePassword?"eye":"eye-off"} onPress={()=>setSecurePassword(!securePassword)}  />}
+                        secureTextEntry={securePassword}
                         value={formData.password}
                         onChangeText={text => setFormData({...formData, password: text})}
                     />
@@ -70,6 +73,7 @@ export default function SignIn (props){
                     <Button
                         mode={"contained"}
                         loading={isLoggingIn}
+                        disabled={isLoggingIn}
                         onPress={()=>{handleLogin()}}
                     >
                         Login
@@ -78,6 +82,7 @@ export default function SignIn (props){
                     <Button
                         mode={"outlined"}
                         onPress={()=>{props.jumpTo("signup")}}
+                        
                     >
                         I don't have an account
                     </Button> 

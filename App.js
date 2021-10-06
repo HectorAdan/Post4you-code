@@ -23,16 +23,19 @@ const theme = {
   },
 };
 
-function App (props) {
+const defaultRoutes = [
+  { key: 'home', title: 'Home', icon:(props)=> <MaterialCommunityIcons {...props} name='fire' size={26} /> },
+  { key: 'login', title: 'Log In', icon:(props)=> <MaterialCommunityIcons {...props} name='login-variant' size={26} /> },
+  { key: 'signup', title: 'Sign Up', icon:(props)=> <MaterialCommunityIcons {...props} name='account-plus' size={26} /> }
+ 
+]
+
+function App () {
   const [index, setIndex] = React.useState(0);
 
-  const [routes,setRoutes] = React.useState([
-    { key: 'home', title: 'Home', icon:(props)=> <MaterialCommunityIcons {...props} name='fire' size={26} /> },
-    { key: 'login', title: 'Log In', icon:(props)=> <MaterialCommunityIcons {...props} name='login-variant' size={26} /> },
-    { key: 'signup', title: 'Sign Up', icon:(props)=> <MaterialCommunityIcons {...props} name='account-plus' size={26} /> }
-   
-  ]);
+  const [routes,setRoutes] = React.useState(defaultRoutes);
   const [userData, setUserData]= useState(null);
+  const [updatePost, setUpdatePost] = useState(false);
 
   useEffect(()=>{
     handleCheckUserLogin()
@@ -48,24 +51,20 @@ function App (props) {
         { key: 'profile', title: 'Profile', icon:(props)=> <MaterialCommunityIcons {...props} name='account' size={26}  /> }
       ])
     }else{
+      setRoutes(defaultRoutes)
       setUserData(null)
-      setRoutes([
-        { key: 'home', title: 'Home', icon:(props)=> <MaterialCommunityIcons {...props} name='fire' size={26} /> },
-        { key: 'login', title: 'Log In', icon:(props)=> <MaterialCommunityIcons {...props} name='login-variant' size={26} /> },
-        { key: 'signup', title: 'Sign Up', icon:(props)=> <MaterialCommunityIcons {...props} name='account-plus' size={26} /> }
-       
-      ])
+      
     }
   }
 
   const renderScene = ({ route, jumpTo }) => {
     switch (route.key) {
       case 'home':
-        return <Home jumpTo={jumpTo} userData={userData}  />;
+        return <Home jumpTo={jumpTo} userData={userData} updatePost={updatePost} setUpdatePost={setUpdatePost} />;
       case 'add':
-        return <AddPost jumpTo={jumpTo} userData={userData} />;
+        return <AddPost jumpTo={jumpTo} userData={userData} setUpdatePost={setUpdatePost} />;
       case 'profile':
-        return <Profile jumpTo={jumpTo} userData={userData} resetSession={resetSession} />;
+        return <Profile jumpTo={jumpTo} userData={userData} resetSession={resetSession} setUpdatePost={setUpdatePost} />;
     }
   }
 
@@ -83,6 +82,7 @@ function App (props) {
   const resetSession =()=>{
     handleCheckUserLogin();
   }
+
 
   return (
       <PaperProvider theme={theme}>
