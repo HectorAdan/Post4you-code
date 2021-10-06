@@ -1,20 +1,44 @@
 
 import React, { useState } from 'react';
 import {
-    View, Text
+    View, Text, Alert
 } from 'react-native';
-import { Avatar, TextInput, Card, HelperText, Paragraph, Button } from 'react-native-paper';
+import { TextInput, Card, HelperText, Paragraph, Button } from 'react-native-paper';
 import styles from './styles';
+
+import PostServices from '../services/PostServices';
 
 export default function AddPost (props){
     const {userData} = props;
+    const {createPost} = PostServices();
+
     const [formData, setFormData] = useState({
-        idUser:1,
+        idUser: userData.idUser,
         title: "",
         content:"",
-        idStatus:1,
+        idStatus: 2,
     });
     const [isCreating, setIsCreating] = useState(false)
+
+    const handleCreatePost =()=>{
+        if(formData.title===""){
+            Alert.alert("Error", "Add a title")
+        }else if(formData.content===""){
+            Alert.alert("Error", "Add a content")
+        }else{
+            setIsCreating(true);
+            createPost(formData).then(res=>{
+                if(res.ok){
+                    Alert.alert("Beautiful!", res.message)
+                    setFormData({...formData, title:"", content:""})
+                    props.jumpTo("home")
+                }else{
+                    Alert.alert("Error", res.message)
+                }
+                setIsCreating(false);
+            })
+        }
+    }
 
     return (
         < >
@@ -28,6 +52,7 @@ export default function AddPost (props){
                     mode={"outlined"}
                     label="Title"
                     value={formData.title}
+                    onChangeText={text => setFormData({...formData, title: text})}
                 />
                 <HelperText visible={false} />
                 <TextInput
@@ -36,11 +61,13 @@ export default function AddPost (props){
                     numberOfLines={8}
                     multiline={true}
                     value={formData.content}
+                    onChangeText={text => setFormData({...formData, content: text})}
                 />
                 <HelperText visible={false} />
                 <Button
                     mode={"contained"}
                     loading={isCreating}
+                    onPress={()=>{handleCreatePost()}}
                 >
                     POST
                 </Button>

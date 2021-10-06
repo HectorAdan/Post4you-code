@@ -35,18 +35,14 @@ export default function SignIn (props){
             })
         }
     }
-
     const setUserSession = async(res)=>{
         const data = JSON.stringify(res.user);
         await AsyncStorage.setItem("@userData", data);
         props.resetSession();
         props.jumpTo("home")
     }
-
     return (
-       
         <View style={styles.formContainer}>
-
                 <View style={{padding:5, backgroundColor:"white",  alignItems:"center"}}>
                     <MaterialCommunityIcons {...props} name='fire' size={26} />
                     <Text style={{fontSize:20,  color:"red", fontWeight:"bold"}}>Post<Text style={{color:"black"}}>4you</Text></Text>
@@ -63,7 +59,6 @@ export default function SignIn (props){
                         onChangeText={text => setFormData({...formData, username: text})}
                     />
                     <HelperText visible={false} />
-                    
                     <TextInput
                         mode={"outlined"}
                         label="Password"

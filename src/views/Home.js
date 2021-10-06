@@ -28,12 +28,13 @@ export default function HomeView(props) {
 
     const handleGetAllPosts = () => {
         getAllPosts().then(res => {
-            setIsLoadingData(false)
+            console.log(res)
             if(res.ok){
                 setPostData(res.posts);
             }else{
                 setPostData([]);
             }
+            setIsLoadingData(false)
         })
     }
 
