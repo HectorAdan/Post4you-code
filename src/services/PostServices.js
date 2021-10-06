@@ -18,6 +18,21 @@ const PostServices = ()=>{
         })
     }
 
+    const getAllPostsByUser = async (idUser)=>{
+        return await fetch(URL_API+"/post-get-all-by-user/"+idUser, {
+            method:"GET",
+            headers:{
+                "Content-Type": "application/json"
+            }
+        }).then(res =>{
+            return res.json();
+        }).then(res=>{
+            return res;
+        }).catch(e=>{
+            console.log("error"+ e)
+        })
+    }
+
     const createPost = async (data)=>{
         return await fetch(URL_API+"/post-create", {
             method:"POST",
@@ -36,6 +51,7 @@ const PostServices = ()=>{
 
     return {
         getAllPosts,
+        getAllPostsByUser,
         createPost
     }
 }
